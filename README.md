@@ -12,7 +12,7 @@ This is a simple Todo application built with Node.js, Express, MongoDB, and EJS.
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/chiragthapa777/todo-app-node.git
 cd todo-app
 ```
 
