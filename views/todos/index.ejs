@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="/scripts/index.js"></script>
+    <title>Todo App</title>
+  </head>
+  <body class="bg-gray-100 text-gray-900 max-w-96 mx-auto">
+    <h1 class="text-2xl font-bold mb-4 text-center">Todo App</h1>
+
+    <!-- Todo form -->
+    <form action="/todos" method="POST" class="mb-6">
+      <div class="mb-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="Task Name"
+          class="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <textarea
+          name="description"
+          placeholder="Short Description"
+          class="w-full p-2 border border-gray-300 rounded-md"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-4">
+        <input
+          type="datetime-local"
+          name="dateTime"
+          class="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md">
+        Add Todo
+      </button>
+    </form>
+
+    <!-- Todo list -->
+    <h1 class="text-xl font-bold mb-4">Todo List</h1>
+    <div class="flex justify-between items-center mb-2">
+      <div>
+        <label for="filter-done">Filter by Done</label>
+        <select id="filter-done" onchange="filterTodos()">
+          <option value="">All</option>
+          <option value="true">Done</option>
+          <option value="false">Not Done</option>
+        </select>
+      </div>
+      <div>
+        <label for="sort-time">Sort by Time</label>
+        <select id="sort-time" onchange="sortTodos()">
+          <option value="">All</option>
+          <option value="upcoming">Upcoming</option>
+        </select>
+      </div>
+    </div>
+    <ul>
+      <% todos.forEach(todo => { %>
+      <li class="p-4 mb-4 border border-gray-300 rounded-md bg-white">
+        <div id="data-<%= todo._id %>">
+          <h2 class="text-xl font-bold <%= todo.done ? 'line-through' : '' %>">
+            <%= todo.name %>
+          </h2>
+          <p><%= todo.dateTime.toLocaleString() %></p>
+          <p><%= todo.description %></p>
+          <p><%= todo.done %></p>
+        </div>
+
+        <!-- Todo edit form -->
+        <form
+          id="edit-form-<%= todo._id %>"
+          class="hidden border p-1 rounded-md"
+        >
+          <input
+            type="text"
+            name="name"
+            value="<%= todo.name %>"
+            class="w-full p-1 border border-gray-300 rounded-md mb-1"
+          />
+          <textarea
+            type="text"
+            name="description"
+            class="w-full p-21 border border-gray-300 rounded-md mb-1"
+          >
+<%= todo.description %></textarea
+          >
+          <input
+            type="datetime-local"
+            name="dateTime"
+            value="<%= todo.dateTime ? new Date(todo.dateTime).toISOString().substring(0,16) : '' %>"
+            class="w-full p-1 border border-gray-300 rounded-md mb-1"
+          />
+          <button
+            type="button"
+            onclick="submitUpdate('<%= todo._id %>')"
+            class="bg-yellow-500 text-white py-1 px-2 rounded-md"
+          >
+            Save
+          </button>
+        </form>
+
+        <div class="mt-2">
+          <button
+            class="bg-yellow-500 text-white py-1 px-2 rounded-md"
+            onclick="editTodo('<%= todo._id %>')"
+          >
+            Edit
+          </button>
+          <form
+            action="/todos/<%= todo._id %>/done?_method=PUT"
+            method="POST"
+            class="inline ml-2"
+          >
+            <button
+              type="submit"
+              class="bg-green-500 text-white py-1 px-2 rounded-md"
+            >
+              Mark as Done
+            </button>
+          </form>
+
+          <form
+            action="/todos/<%= todo._id %>?_method=DELETE"
+            method="POST"
+            class="inline ml-2"
+          >
+            <button
+              type="submit"
+              class="bg-red-500 text-white py-1 px-2 rounded-md"
+            >
+              Delete
+            </button>
+          </form>
+        </div>
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>
